@@ -1,13 +1,17 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
-type Store = {
-  count: number
-  inc: () => void
-}
+type AuthState = {
+  token: string | null;
+  setToken: (token: string | null) => void;
+};
 
-const useStore = create<Store>()((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 })),
-}))
+const useAuthStore = create<AuthState>()((set) => ({
+  token: localStorage.getItem('token'),
+  setToken: (token: string | null) => {
+    if (token) localStorage.setItem('token', token);
+    else localStorage.removeItem('token');
+    set({ token });
+  },
+}));
 
-export default useStore
+export default useAuthStore;

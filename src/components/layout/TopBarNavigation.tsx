@@ -12,7 +12,6 @@ type TobBarNavigationProps = {
 
 const TopBarNavigation: FC<TobBarNavigationProps> = ({ navContents }) => {
   const { pathname } = useLocation();
-  console.log(pathname)
 
   const itemClassName = (href: string) =>
     ['hover:text-gray-300', pathname === href ? 'underline underline-offset-4' : ''].join(' ');

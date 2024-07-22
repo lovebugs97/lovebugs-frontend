@@ -10,15 +10,15 @@ const NavContents = [
 ];
 
 const TopBar: FC = () => {
-  const isLogin = true
+  const isLogin = true;
 
   return (
     <nav className="bg-white flex items-center justify-between p-4">
       <AppLogo />
       <TopBarNavigation navContents={NavContents} />
-      {isLogin ? <UserProfile /> : <p>Get Started</p> }
+      {isLogin ? <UserProfile /> : <p>Get Started</p>}
     </nav>
   );
-}
+};
 
 export default TopBar;

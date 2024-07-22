@@ -8,6 +8,6 @@ const UserProfile: FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default UserProfile;
