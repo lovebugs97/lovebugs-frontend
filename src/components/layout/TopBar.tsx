@@ -2,6 +2,8 @@ import AppLogo from '../common/AppLogo.tsx';
 import TopBarNavigation from './TopBarNavigation.tsx';
 import { FC } from 'react';
 import UserProfile from '../common/UserProfile.tsx';
+import { useAuthStore } from '../../store/Store.tsx';
+import GetStarted from '../../containers/GetStarted.tsx';
 
 const NavContents = [
   { name: '홈', href: '/' },
@@ -10,13 +12,13 @@ const NavContents = [
 ];
 
 const TopBar: FC = () => {
-  const isLogin = true;
+  const isLogin = useAuthStore((state) => state.token);
 
   return (
-    <nav className="bg-white flex items-center justify-between p-4">
+    <nav className="bg-white flex items-center justify-between p-8 border-b-2">
       <AppLogo />
       <TopBarNavigation navContents={NavContents} />
-      {isLogin ? <UserProfile /> : <p>Get Started</p>}
+      {isLogin !== null ? <UserProfile /> : <GetStarted />}
     </nav>
   );
 };

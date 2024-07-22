@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/home/Home.tsx';
 import Layout from './components/layout/Layout.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import useAuthStore from './store/Store.tsx';
+import { useAuthStore } from './store/Store.tsx';
+import Signup from './pages/signup/Signup.tsx';
 
 export const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
           </Route>
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
