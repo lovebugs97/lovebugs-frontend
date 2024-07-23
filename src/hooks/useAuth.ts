@@ -23,7 +23,7 @@ const useAuth = () => {
       setUser(null); /* setUser(null) -> 자동으로 localStorage에 담긴 user 정보 삭제 */
     },
     onError: (error) => {
-      console.log('error: ', error)
+      console.log('error: ', error);
     },
   });
 

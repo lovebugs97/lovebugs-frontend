@@ -16,10 +16,9 @@ function App() {
 
   useEffect(() => {
     if (userExist) {
-      const user = decryptData<LoginResponse>(userExist)
+      const user = decryptData<LoginResponse>(userExist);
       setUser(user);
-    }
-    else setUser(null);
+    } else setUser(null);
   }, [userExist, setUser]);
 
   return (

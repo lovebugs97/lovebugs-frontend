@@ -10,7 +10,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const decryptedUser = localStorage.getItem('user');
   if (decryptedUser) {
-    const user = decryptData<LoginResponse>(decryptedUser)
+    const user = decryptData<LoginResponse>(decryptedUser);
     const token = user.accessToken;
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -58,7 +58,7 @@ export const logout = async (memberId: number) => {
     },
   );
 
-  return Promise.resolve()
+  return Promise.resolve();
 };
 
 export default api;

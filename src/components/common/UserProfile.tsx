@@ -8,10 +8,10 @@ const DropdownItems = [{ name: '마이 페이지', href: '/my-page' }];
 const UserProfile: FC = () => {
   const user = useAuthStore((state) => state.user);
   const { logoutMutation } = useAuth();
-  console.log(user)
+  console.log(user);
   const handleLogoutBtn = () => {
-    if (!user) return
-    logoutMutation.mutate(user.id)
+    if (!user) return;
+    logoutMutation.mutate(user.id);
   };
 
   return (
