@@ -1,4 +1,4 @@
-declare module 'login-types' {
+declare module 'auth-types' {
   type LoginRequest = {
     email: string;
     password: string;
@@ -11,14 +11,7 @@ declare module 'login-types' {
     profileImage: string | null;
     gender: string;
     createdAt: string;
-    lastLoginDate: string;
+    lastLoginDate: string | null;
     accessToken: string;
-  };
-
-  type LoginError = {
-    timeStamp: string;
-    statusCode: number;
-    error: string;
-    message: string;
   };
 }

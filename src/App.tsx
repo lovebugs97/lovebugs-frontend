@@ -4,15 +4,24 @@ import Layout from './components/layout/Layout.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from './store/Store.tsx';
 import Signup from './pages/signup/Signup.tsx';
+import { useEffect } from 'react';
+import { decryptData } from './utils/cryptoUtils.ts';
+import { LoginResponse } from 'auth-types';
 
-export const queryClient = new QueryClient();
-
-const token = localStorage.getItem('token');
-if (token) {
-  useAuthStore.getState().setToken(token);
-}
+const queryClient = new QueryClient();
 
 function App() {
+  const userExist = localStorage.getItem('user');
+  const setUser = useAuthStore((state) => state.setUser);
+
+  useEffect(() => {
+    if (userExist) {
+      const user = decryptData<LoginResponse>(userExist)
+      setUser(user);
+    }
+    else setUser(null);
+  }, [userExist, setUser]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

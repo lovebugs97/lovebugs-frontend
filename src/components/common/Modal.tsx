@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { ReactDivProps } from 'html-element-types';
+import { MdClose } from 'react-icons/md';
 
 type ModalProps = ReactDivProps & {
   open?: boolean;
@@ -21,7 +22,7 @@ export const ModalContent: FC<ModalContentProps> = ({ onClose, className: _class
     <div {...props} className={className}>
       <div className="absolute right-7 top-7">
         <button onClick={onClose} className="text-[20px] hover:text-gray-300">
-          X
+          <MdClose />
         </button>
       </div>
       {children}

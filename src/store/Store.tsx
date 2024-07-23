@@ -1,30 +1,18 @@
 import { create } from 'zustand';
-import { LoginResponse } from 'login-types';
+import { LoginResponse } from 'auth-types';
+import { encryptData } from '../utils/cryptoUtils.ts';
 
 type AuthState = {
-  isError: boolean;
-  setIsError: (isError: boolean) => void;
-  token: string | null;
-  setToken: (token: string | null) => void;
   user: LoginResponse | null;
   setUser: (user: LoginResponse | null) => void;
 };
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  isError: false,
-  setIsError: (isError: boolean) => {
-    set({ isError });
-  },
-
-  token: localStorage.getItem('token'),
-  setToken: (token: string | null) => {
-    if (token) localStorage.setItem('token', token);
-    else localStorage.removeItem('token');
-    set({ token });
-  },
-
   user: null,
+
   setUser: (user: LoginResponse | null) => {
+    if (user) localStorage.setItem('user', encryptData<LoginResponse>(user));
+    else localStorage.removeItem('user');
     set({ user });
   },
 }));

@@ -1,29 +1,33 @@
 import { useMutation } from '@tanstack/react-query';
-import { login } from '../services/api.ts';
+import { login, logout } from '../services/api.ts';
 import { useAuthStore } from '../store/Store.tsx';
-import { AxiosError } from 'axios';
-import { LoginError, LoginRequest, LoginResponse } from 'login-types';
+import { LoginRequest, LoginResponse } from 'auth-types';
+import { ErrorResponse } from 'global-types';
 
 const useAuth = () => {
-  const isError = useAuthStore((state) => state.isError);
-  const token = useAuthStore((state) => state.token);
+  const setUser = useAuthStore((state) => state.setUser);
 
-  const loginMutation = useMutation<LoginResponse, AxiosError<LoginError>, LoginRequest>({
-    mutationFn: async ({ email, password }) => {
-      return await login(email, password);
-    },
+  const loginMutation = useMutation<LoginResponse, ErrorResponse, LoginRequest>({
+    mutationFn: async ({ email, password }) => await login(email, password),
     onSuccess: (data) => {
-      useAuthStore.getState().setToken(data.accessToken);
-      useAuthStore.getState().setUser(data);
-      useAuthStore.getState().setIsError(false);
+      setUser(data);
     },
     onError: (error) => {
-      console.error(error);
-      useAuthStore.getState().setIsError(true);
+      console.log('error: ', error);
     },
   });
 
-  return { token, isError, loginMutation };
+  const logoutMutation = useMutation<void, ErrorResponse, number>({
+    mutationFn: async (id) => await logout(id),
+    onSuccess: () => {
+      setUser(null); /* setUser(null) -> 자동으로 localStorage에 담긴 user 정보 삭제 */
+    },
+    onError: (error) => {
+      console.log('error: ', error)
+    },
+  });
+
+  return { loginMutation, logoutMutation };
 };
 
 export default useAuth;

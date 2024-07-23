@@ -4,9 +4,13 @@ import { useAuthStore } from '../../store/Store.tsx';
 interface HomeProps {}
 
 const Home: FC<HomeProps> = () => {
-  console.log(useAuthStore((state) => state.user));
+  const user = useAuthStore((state) => state.user);
 
-  return <div></div>;
+  return (
+    <div>
+      <img src={user?.profileImage ? user?.profileImage : ''} />
+    </div>
+  );
 };
 
 export default Home;
