@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { LoginResponse } from 'auth-types';
-import { encryptData } from '../utils/cryptoUtils.ts';
+import { setUserToStorage } from '../utils/cryptoUtils.ts';
 
 type AuthState = {
   user: LoginResponse | null;
@@ -11,7 +11,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
 
   setUser: (user: LoginResponse | null) => {
-    if (user) localStorage.setItem('user', encryptData<LoginResponse>(user));
+    if (user) setUserToStorage(user);
     else localStorage.removeItem('user');
     set({ user });
   },

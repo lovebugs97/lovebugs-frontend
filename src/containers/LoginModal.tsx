@@ -19,15 +19,16 @@ const LoginModal: FC<LoginModalProps> = ({ modalOpen, setModalOpen }) => {
 
   const { loginMutation } = useAuth();
 
-  const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({ ...credentials, email: e.currentTarget.value });
+  const handleInputChange = (field: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredentials((prevState) => ({
+      ...prevState,
+      [field]: e.target.value,
+    }));
   };
 
-  const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({ ...credentials, password: e.currentTarget.value });
-  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const handleLoginBtn = () => {
     loginMutation
       .mutateAsync(credentials)
       .then(() => setModalOpen(false))
@@ -40,7 +41,7 @@ const LoginModal: FC<LoginModalProps> = ({ modalOpen, setModalOpen }) => {
 
   useEffect(() => {
     return () => setModalOpen(false);
-  }, []);
+  }, [setModalOpen]);
 
   return (
     <Modal open={modalOpen}>
@@ -48,16 +49,30 @@ const LoginModal: FC<LoginModalProps> = ({ modalOpen, setModalOpen }) => {
         <p className="text-center font-semibold text-[24px]">로그인</p>
         {invalidCredentials && <p className="text-center text-red-400 mt-5">아이디 혹은 비밀번호를 확인하세요.</p>}
         <ModalAction>
-          <section className="flex flex-col justify-center gap-5 m-auto">
-            <input type="text" onChange={handleEmailInput} placeholder="Email" className={inputClassName} />
-            <input type="password" onChange={handlePasswordInput} placeholder="Password" className={inputClassName} />
-            <Link className="text-center underline underline-offset-2 hover:text-gray-300" to={'/signup'}>
+          <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-5 m-auto">
+            <input
+              type="text"
+              onChange={(e) => handleInputChange('email', e)}
+              placeholder="Email"
+              className={inputClassName}
+              autoComplete="username"
+            />
+            <input
+              type="password"
+              onChange={(e) => handleInputChange('password', e)}
+              placeholder="Password"
+              className={inputClassName}
+              autoComplete="current-password"
+            />
+            <Link
+              onClick={() => setModalOpen(false)}
+              className="text-center underline underline-offset-2 hover:text-gray-300"
+              to={'/signup'}
+            >
               아직 회원이 아니신가요?
             </Link>
-            <button className="btn btn-primary" onClick={handleLoginBtn}>
-              Login
-            </button>
-          </section>
+            <button className="btn btn-primary">Login</button>
+          </form>
         </ModalAction>
       </ModalContent>
     </Modal>

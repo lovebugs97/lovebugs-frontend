@@ -7,14 +7,16 @@ import { Link, useLocation } from 'react-router-dom';
 const NavContents = [
   { name: '홈', href: '/' },
   { name: '소셜', href: '/social' },
-  { name: '히스토리', href: '/history' },
+  { name: '갤러리', href: '/gallery' },
 ];
 
 const TopBar: FC = () => {
   const isLogin = useAuthStore((state) => state.user);
   const { pathname } = useLocation();
   const itemClassName = (href: string) =>
-    ['text-[20px] hover:text-gray-300', pathname === href ? 'underline underline-offset-4' : ''].join(' ');
+    ['text-[20px] hover:text-gray-300 hover:text-[25px]', pathname === href ? 'underline underline-offset-4' : ''].join(
+      ' ',
+    );
 
   return (
     <nav className="bg-white flex items-center justify-between px-8 py-4 border-b-2">
@@ -26,7 +28,7 @@ const TopBar: FC = () => {
       </div>
 
       <div>
-        <ul className="flex items-center gap-6 text-[18px] font-semibold">
+        <ul className="flex items-center gap-8 text-[18px] font-semibold">
           {NavContents.map(({ name, href }) => (
             <li key={name}>
               <Link to={href} className={itemClassName(href)}>

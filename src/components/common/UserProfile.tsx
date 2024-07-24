@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/Store.tsx';
 import useAuth from '../../hooks/useAuth.ts';
 
-const DropdownItems = [{ name: '마이 페이지', href: '/my-page' }];
+const DropdownItems = [{ name: '내 정보', href: '/mypage' }];
 
 const UserProfile: FC = () => {
   const user = useAuthStore((state) => state.user);
   const { logoutMutation } = useAuth();
-  console.log(user);
+
   const handleLogoutBtn = () => {
     if (!user) return;
-    logoutMutation.mutate(user.id);
+    logoutMutation.mutate({ id: user.id, accessToken: user.accessToken });
   };
 
   return (
@@ -19,7 +19,7 @@ const UserProfile: FC = () => {
       <div
         tabIndex={0}
         role="button"
-        className="btn m-auto w-12 h-12 rounded-full p-4 border-2 border-gray-300"
+        className="btn m-auto w-12 h-12 rounded-full p-4 border-2 border-gray-200 hover:border-gray-700"
         style={{
           background:
             user && user.profileImage ? "url('" + user.profileImage + "')" : `url('./src/assets/images/user.png')`,

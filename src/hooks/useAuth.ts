@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { login, logout } from '../services/api.ts';
 import { useAuthStore } from '../store/Store.tsx';
-import { LoginRequest, LoginResponse } from 'auth-types';
+import { LoginRequest, LoginResponse, LogoutRequest } from 'auth-types';
 import { ErrorResponse } from 'global-types';
+import { formatDateFromISOString } from '../utils/dateUtils.ts';
+import { login, logout } from '../services/auth/authService.ts';
 
 const useAuth = () => {
   const setUser = useAuthStore((state) => state.setUser);
@@ -10,20 +11,27 @@ const useAuth = () => {
   const loginMutation = useMutation<LoginResponse, ErrorResponse, LoginRequest>({
     mutationFn: async ({ email, password }) => await login(email, password),
     onSuccess: (data) => {
-      setUser(data);
+      const formatted: LoginResponse = {
+        ...data,
+        createdAt: formatDateFromISOString(data.createdAt),
+        lastLoginDate: data.lastLoginDate ? formatDateFromISOString(data.lastLoginDate) : null,
+      };
+
+      setUser(formatted);
     },
     onError: (error) => {
-      console.log('error: ', error);
+      console.log('Login Error:', error);
     },
   });
 
-  const logoutMutation = useMutation<void, ErrorResponse, number>({
-    mutationFn: async (id) => await logout(id),
+  const logoutMutation = useMutation<void, ErrorResponse, LogoutRequest>({
+    mutationFn: async (logoutRequest) => await logout(logoutRequest),
     onSuccess: () => {
       setUser(null); /* setUser(null) -> 자동으로 localStorage에 담긴 user 정보 삭제 */
     },
     onError: (error) => {
       console.log('error: ', error);
+      setUser(null);
     },
   });
 

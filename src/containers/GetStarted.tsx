@@ -7,7 +7,7 @@ const GetStarted = () => {
   return (
     <div>
       <button
-        className="text-[18px] font-semibold underline underline-offset-2 hover:text-gray-300"
+        className="btn btn-primary text-[18px] font-semibold hover:text-gray-300"
         onClick={() => setModalOpen(true)}
       >
         Get Started
