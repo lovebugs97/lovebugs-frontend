@@ -20,8 +20,8 @@ export const ModalContent: FC<ModalContentProps> = ({ onClose, className: _class
 
   return (
     <div {...props} className={className}>
-      <div className="absolute right-7 top-7">
-        <button onClick={onClose} className="text-[20px] hover:text-gray-300">
+      <div className="absolute right-10 top-10">
+        <button onClick={onClose} className="text-[36px] text-gray-300 hover:text-black">
           <MdClose />
         </button>
       </div>

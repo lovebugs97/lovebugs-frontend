@@ -1,4 +1,13 @@
 declare module 'auth-types' {
+  type RoleType = 'ROLE_USER' | 'ROLE_IMPORTANT' | 'ROLE_VIP' | 'ROLE_ADMIN';
+
+  type SignupRequest = {
+    name: string;
+    email: string;
+    password: string;
+    gender: number;
+  };
+
   type LoginRequest = {
     email: string;
     password: string;
@@ -14,6 +23,7 @@ declare module 'auth-types' {
     lastLoginDate: string | null;
     accessToken: string;
     refreshToken: string;
+    role: RoleType;
   };
 
   type LogoutRequest = {

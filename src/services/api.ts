@@ -60,8 +60,9 @@ api.interceptors.response.use(
         // Refresh Token도 만료되었을 때
         if (refreshResponse.status === 401) {
           // TODO: 재로그인 로직 추가
-          alert('로그인 세션이 만료되었습니다.');
+          setUserToStorage(null);
           window.location.href = '/';
+          return Promise.reject();
         }
       } catch (refreshError) {
         console.error('Refresh token request failed:', refreshError);

@@ -1,7 +1,16 @@
-import { LoginResponse, LogoutRequest, TokenReIssueRequest, TokenReIssueResponse } from 'auth-types';
+import { LoginResponse, LogoutRequest, SignupRequest, TokenReIssueRequest, TokenReIssueResponse } from 'auth-types';
 import { getUserFromStorage, setUserToStorage } from '../../utils/cryptoUtils.ts';
 import { HttpStatusCode } from 'axios';
 import api from '../api.ts';
+
+export const signup = async (signupRequest: SignupRequest) => {
+  const res = await api.post<void>('/auth-service/auth/v1/signup', signupRequest, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (res.status === HttpStatusCode.Created) return Promise.resolve();
+  return Promise.reject();
+};
 
 export const login = async (email: string, password: string) => {
   const res = await api.post<LoginResponse>(
@@ -12,11 +21,12 @@ export const login = async (email: string, password: string) => {
     },
   );
 
-  return res.data;
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve(res.data);
+  return Promise.reject();
 };
 
 export const logout = async ({ id, accessToken }: LogoutRequest) => {
-  await api.post<void>(
+  const res = await api.post<void>(
     '/auth-service/auth/v1/logout',
     { id, accessToken },
     {
@@ -24,13 +34,23 @@ export const logout = async ({ id, accessToken }: LogoutRequest) => {
     },
   );
 
-  return Promise.resolve();
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
+};
+
+export const emailDuplicationCheck = async (email: string) => {
+  const res = await api.get<void>(`/auth-service/member/v1/check/email/${email}`, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
 };
 
 export const test = async () => {
-  await api.post<void>('/auth-service/token/v1/validation', {});
-
-  return Promise.resolve();
+  const res = await api.post<void>('/auth-service/token/v1/validation', {});
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
 };
 
 export const test2 = async () => {

@@ -1,25 +1,34 @@
 import CryptoJS from 'crypto-js';
-import { LoginResponse } from 'auth-types';
+import { User } from 'global-types';
 
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
+const ENCRYPTION_USER_KEY = import.meta.env.VITE_ENCRYPTION_USER_KEY;
 
-export function encryptData<T>(data: T): string {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
+function encryptData<T>(data: T): string {
+  const str = typeof data === 'string' ? data : JSON.stringify(data);
+  return CryptoJS.AES.encrypt(str, ENCRYPTION_KEY).toString();
 }
 
-export function decryptData<R>(cipher: string): R {
+function decryptData(cipher: string): string {
   const bytes = CryptoJS.AES.decrypt(cipher, ENCRYPTION_KEY);
-  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-  return JSON.parse(decryptedData) as R;
+  return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-export function getUserFromStorage(): LoginResponse | null {
-  const cipher = localStorage.getItem('user');
-  if (cipher) return decryptData<LoginResponse>(cipher);
+function decryptJsonData<R>(cipher: string): R {
+  const str = decryptData(cipher);
+  return JSON.parse(str) as R;
+}
+
+export function getUserFromStorage(): User | null {
+  const cipher = localStorage.getItem(ENCRYPTION_USER_KEY);
+  if (cipher) return decryptJsonData<User>(cipher);
   else return null;
 }
 
-export function setUserToStorage(user: LoginResponse) {
-  const cipher = encryptData<LoginResponse>(user);
-  localStorage.setItem('user', cipher);
+export function setUserToStorage(user: User | null) {
+  if (user === null) localStorage.removeItem(ENCRYPTION_USER_KEY);
+  else {
+    const cipher = encryptData(user);
+    localStorage.setItem(ENCRYPTION_USER_KEY, cipher);
+  }
 }
