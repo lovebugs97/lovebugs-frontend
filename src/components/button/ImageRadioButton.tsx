@@ -18,7 +18,7 @@ const ImageRadioButton: FC<ImageRadioButtonProps> = ({ src, alt, title, name, ch
         className={`w-48 h-48 object-cover p-4 border-2 ${checked ? 'border-gray-300 rounded-3xl' : 'border-transparent'}`}
       />
       <p className="text-center mt-2 mb-2 text-[20px] font-bold text-gray-600">{title}</p>
-      <input id="input" name={name} type="radio" checked={checked} onChange={onChange} />
+      <input name={name} type="radio" checked={checked} onChange={onChange} />
     </label>
   );
 };

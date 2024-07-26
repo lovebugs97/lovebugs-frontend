@@ -2,7 +2,7 @@ import { LiaEyeSlashSolid, LiaEyeSolid } from 'react-icons/lia';
 import { ChangeEvent, MouseEvent, FC, useState } from 'react';
 
 type PasswordInputGroupProps = {
-  onChange: (e: ChangeEvent<HTMLInputElement>, key: 'password' | 'passwordCheck') => void;
+  onChange: (key: 'password' | 'passwordCheck') => (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const PasswordInputGroup: FC<PasswordInputGroupProps> = ({ onChange }) => {
@@ -23,11 +23,12 @@ const PasswordInputGroup: FC<PasswordInputGroupProps> = ({ onChange }) => {
           type={inputType}
           name="password"
           placeholder="Password"
+          autoComplete="off"
           className={inputClassName}
-          onChange={(e) => onChange(e, 'password')}
+          onChange={onChange('password')}
         />
 
-        <button className="text-4xl" onClick={handleShowPwBtn}>
+        <button className="text-4xl" onClick={handleShowPwBtn} tabIndex={-1}>
           {inputType === 'text' ? <LiaEyeSlashSolid /> : <LiaEyeSolid />}
         </button>
       </div>
@@ -36,8 +37,9 @@ const PasswordInputGroup: FC<PasswordInputGroupProps> = ({ onChange }) => {
         type={inputType}
         name="passwordCheck"
         placeholder="Password Check"
+        autoComplete="off"
         className={inputClassName}
-        onChange={(e) => onChange(e, 'passwordCheck')}
+        onChange={onChange('passwordCheck')}
       />
     </>
   );

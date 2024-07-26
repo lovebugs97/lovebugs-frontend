@@ -42,4 +42,13 @@ declare module 'auth-types' {
     accessToken: string;
     refreshToken: string;
   };
+
+  type SendVerificationCodeRequest = {
+    name: string;
+    email: string;
+  };
+
+  type VerifyCodeRequest = {
+    verificationCode: string;
+  };
 }

@@ -1,4 +1,12 @@
-import { LoginResponse, LogoutRequest, SignupRequest, TokenReIssueRequest, TokenReIssueResponse } from 'auth-types';
+import {
+  LoginResponse,
+  LogoutRequest,
+  SendVerificationCodeRequest,
+  SignupRequest,
+  TokenReIssueRequest,
+  TokenReIssueResponse,
+  VerifyCodeRequest,
+} from 'auth-types';
 import { getUserFromStorage, setUserToStorage } from '../../utils/cryptoUtils.ts';
 import { HttpStatusCode } from 'axios';
 import api from '../api.ts';
@@ -39,8 +47,26 @@ export const logout = async ({ id, accessToken }: LogoutRequest) => {
 };
 
 export const emailDuplicationCheck = async (email: string) => {
-  const res = await api.get<void>(`/auth-service/member/v1/check/email/${email}`, {
+  const res = await api.get<void>(`/auth-service/auth/v1/email/verification/check/${email}`, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
+};
+
+export const sendVerificationCode = async (sendVerificationCodeRequest: SendVerificationCodeRequest) => {
+  const res = await api.post<void>('/auth-service/auth/v1/email/verification/send/code', sendVerificationCodeRequest, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
+};
+
+export const verifyCode = async (verifyCodeRequest: VerifyCodeRequest) => {
+  const res = await api.post<void>('/auth-service/auth/v1/email/verification/verify/code', verifyCodeRequest, {
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (res.status === HttpStatusCode.Ok) return Promise.resolve();
