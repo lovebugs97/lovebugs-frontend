@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom';
 import Avatar from './Avatar.tsx';
 import { User } from 'global-types';
 import useAuth from '../../hooks/useAuth.ts';
+import { isAuthenticated } from '../../utils/validationUtils.ts';
+import { RoleType } from 'auth-types';
 
 type UserDropdownAvatarProps = {
   user: User;
 };
 
 const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
-  const { id, accessToken, profileImage } = user;
+  const { id, accessToken, profileImage, roleType: currentRole } = user;
   const { logoutMutation } = useAuth();
+  console.log(currentRole);
 
   const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -25,11 +28,14 @@ const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
         className="btn m-auto w-12 h-12 rounded-full p-4 border-2 border-gray-200 hover:border-gray-700 hover:scale-110"
       />
       <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-        {DropdownItems.map(({ name, href }, index) => (
-          <li key={index}>
-            <Link to={href}>{name}</Link>
-          </li>
-        ))}
+        {DropdownItems.map(
+          ({ name, href, neededRole }, index) =>
+            isAuthenticated(currentRole, neededRole) && (
+              <li key={index}>
+                <Link to={href}>{name}</Link>
+              </li>
+            ),
+        )}
         <li>
           <button onClick={handleLogout}>로그아웃</button>
         </li>
@@ -38,6 +44,9 @@ const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
   );
 };
 
-const DropdownItems = [{ name: '내 정보', href: '/mypage' }];
+const DropdownItems: { name: string; href: string; neededRole: RoleType }[] = [
+  { name: '내 정보', href: '/mypage', neededRole: 'ROLE_USER' },
+  { name: '관리자', href: '/admin', neededRole: 'ROLE_ADMIN' },
+];
 
 export default DropdownAvatar;

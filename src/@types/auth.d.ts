@@ -23,7 +23,7 @@ declare module 'auth-types' {
     lastLoginDate: string | null;
     accessToken: string;
     refreshToken: string;
-    role: RoleType;
+    roleType: RoleType;
   };
 
   type LogoutRequest = {

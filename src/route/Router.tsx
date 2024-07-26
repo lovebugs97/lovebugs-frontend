@@ -6,6 +6,8 @@ import MyPage from '../pages/MyPage.tsx';
 import PrivateRoute from './PrivateRoute.tsx';
 import NonPrivateRoute from './NonPrivateRoute.tsx';
 import NotFound from '../pages/NotFound.tsx';
+import AdminRoute from './AdminRoute.tsx';
+import Admin from '../pages/Admin.tsx';
 
 const Router = () => {
   return (
@@ -17,6 +19,9 @@ const Router = () => {
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/mypage" element={<MyPage />} />
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<Admin />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

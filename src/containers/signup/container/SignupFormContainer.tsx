@@ -59,7 +59,7 @@ const SignupFormContainer: FC = () => {
   };
 
   const handleErrorMessage = () => {
-    const { emailNotValidated, emailDuplicated, emailNotVerified, passwordNotValidated, passwordNotMatched } =
+    const { emailNotValidated, emailDuplicated, emailNotVerified, passwordNotValidated, passwordNotMatched, DONE } =
       SignupErrorMsg;
 
     if (!emailValidation) return emailNotValidated;
@@ -67,7 +67,7 @@ const SignupFormContainer: FC = () => {
     if (!emailVerified) return emailNotVerified;
     if (!passwordValidation) return passwordNotValidated;
     if (!passwordMatch) return passwordNotMatched;
-    return '';
+    return DONE;
   };
 
   return (
