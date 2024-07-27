@@ -74,7 +74,7 @@ export const verifyCode = async (verifyCodeRequest: VerifyCodeRequest) => {
 };
 
 export const test = async () => {
-  const res = await api.post<void>('/auth-service/token/v1/validation', {});
+  const res = await api.get<void>('/auth-service/token/v1/validation', {});
   if (res.status === HttpStatusCode.Ok) return Promise.resolve();
   return Promise.reject();
 };

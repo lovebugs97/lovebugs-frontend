@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from 'axios';
 import { TokenReIssueRequest, TokenReIssueResponse } from 'auth-types';
 import { getUserFromStorage, setUserToStorage } from '../utils/cryptoUtils.ts';
+import { logout } from './auth/authService.ts';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 5000,
+  timeout: 10000,
 });
 
 api.interceptors.request.use(
@@ -28,7 +29,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const user = getUserFromStorage();
-    console.log(user);
 
     const originalRequest = error.config as AxiosRequestConfig & {
       _retry?: boolean;
@@ -36,6 +36,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === HttpStatusCode.Unauthorized && user && !originalRequest._retry) {
       originalRequest._retry = true;
+      console.log('interceptors response executed');
 
       try {
         const refreshResponse = await api.post<TokenReIssueResponse>(
@@ -57,17 +58,16 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
 
-        // Refresh Token도 만료되었을 때
-        if (refreshResponse.status === 401) {
-          // TODO: 재로그인 로직 추가
-          setUserToStorage(null);
-          window.location.href = '/';
-          return Promise.reject();
-        }
+        return Promise.reject();
       } catch (refreshError) {
-        console.error('Refresh token request failed:', refreshError);
-        alert('로그인 세션이 만료되었습니다.');
-        window.location.href = '/';
+        logout({ id: user.id, accessToken: user.accessToken })
+          .catch(() => console.log('Logout Failed'))
+          .finally(() => {
+            console.log('logout finally');
+            setUserToStorage(null);
+            alert('로그인 세션이 만료되었습니다.');
+            window.location.reload();
+          });
         return Promise.reject(refreshError);
       }
     }
