@@ -51,4 +51,24 @@ declare module 'auth-types' {
   type VerifyCodeRequest = {
     verificationCode: string;
   };
+
+  type FindUsersResponse = {
+    id: number;
+    email: string;
+    name: string;
+    profileImage: string | null;
+    gender: string;
+    createdAt: string;
+    lastLoginDate: string | null;
+    refreshToken: string | null;
+    roleType: RoleType;
+  };
+
+  type Page<T> = {
+    content: T[];
+    last: boolean;
+    totalPages: number;
+    totalElements: number;
+    numberOfElements: number;
+  };
 }

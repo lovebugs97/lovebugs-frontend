@@ -1,13 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import DropdownAvatar from '../../components/avatar/DropdownAvatar.tsx';
-import LoginModal from '../../components/modal/LoginModal.tsx';
-import useAuth from '../../hooks/useAuth.ts';
+import DropdownAvatar from '../components/avatar/DropdownAvatar.tsx';
+import LoginModal from '../components/modal/LoginModal.tsx';
+import useAuth from '../hooks/useAuth.ts';
 
 const DefaultLayout: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { pathname } = useLocation();
   const { user } = useAuth();
+
+  console.log(user);
 
   useEffect(() => {
     return () => setModalOpen(false);

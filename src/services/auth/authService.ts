@@ -1,6 +1,8 @@
 import {
+  FindUsersResponse,
   LoginResponse,
   LogoutRequest,
+  Page,
   SendVerificationCodeRequest,
   SignupRequest,
   TokenReIssueRequest,
@@ -70,6 +72,13 @@ export const verifyCode = async (verifyCodeRequest: VerifyCodeRequest) => {
   });
 
   if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+  return Promise.reject();
+};
+
+export const findUsers = async (page: number, size: number) => {
+  const res = await api.get<Page<FindUsersResponse>>(`/auth-service/admin/v1/member/list?page=${page}&size=${size}`);
+
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve(res.data);
   return Promise.reject();
 };
 

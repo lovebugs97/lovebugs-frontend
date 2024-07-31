@@ -13,7 +13,6 @@ type UserDropdownAvatarProps = {
 const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
   const { id, accessToken, profileImage, roleType: currentRole } = user;
   const { logoutMutation } = useAuth();
-  console.log(currentRole);
 
   const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -24,8 +23,8 @@ const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
     <div className="dropdown dropdown-hover dropdown-end">
       <Avatar
         role="button"
-        imageSrc={profileImage}
-        className="btn m-auto w-12 h-12 rounded-full p-4 border-2 border-gray-200 hover:border-gray-700 hover:scale-110"
+        imageSrc={profileImage !== null ? `url${profileImage}` : `url(./src/assets/images/user.png)`}
+        className="btn m-auto w-12 h-12 p-4"
       />
       <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
         {DropdownItems.map(
@@ -46,7 +45,7 @@ const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
 
 const DropdownItems: { name: string; href: string; neededRole: RoleType }[] = [
   { name: '내 정보', href: '/mypage', neededRole: 'ROLE_USER' },
-  { name: '관리자', href: '/admin', neededRole: 'ROLE_ADMIN' },
+  { name: '관리자', href: '/admin/member', neededRole: 'ROLE_ADMIN' },
 ];
 
 export default DropdownAvatar;
