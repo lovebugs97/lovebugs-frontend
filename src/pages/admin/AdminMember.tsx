@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import AdminMemberContainer from '../../containers/admin/member/container/AdminMemberContainer.tsx';
+import AdminUserContainer from '../../features/admin/member/container/AdminUserContainer.tsx';
 
 const AdminMember: FC = () => {
   return (
     <main>
-      <AdminMemberContainer />
+      <AdminUserContainer />
     </main>
   );
 };

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import AdminBlackListContainer from '../../containers/admin/blacklist/AdminBlackListContainer.tsx';
+import AdminBlackListContainer from '../../features/admin/blacklist/AdminBlackListContainer.tsx';
 
 const AdminBlackList: FC = () => {
   return (

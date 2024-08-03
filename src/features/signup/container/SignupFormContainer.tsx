@@ -2,7 +2,7 @@ import { ChangeEvent, MouseEvent, FC, FormEvent } from 'react';
 import { isValidEmail, isValidPassword } from '../../../utils/validationUtils.ts';
 import useAuth from '../../../hooks/useAuth.ts';
 import SelectRadioButtonGroup from '../components/SelectRadioButtonGroup.tsx';
-import useSignup, { SignupInputType } from '../../../hooks/useSignup.ts';
+import useSignup, { SignupInputType } from '../hooks/useSignup.ts';
 import PasswordInputGroup from '../components/PasswordInputGroup.tsx';
 import { SignupErrorMsg } from '../../../constants/constant.ts';
 

@@ -9,8 +9,6 @@ const DefaultLayout: FC = () => {
   const { pathname } = useLocation();
   const { user } = useAuth();
 
-  console.log(user);
-
   useEffect(() => {
     return () => setModalOpen(false);
   }, [setModalOpen]);

@@ -5,16 +5,13 @@ import {
   Page,
   SendVerificationCodeRequest,
   SignupRequest,
-  TokenReIssueRequest,
-  TokenReIssueResponse,
   VerifyCodeRequest,
 } from 'auth-types';
-import { getUserFromStorage, setUserToStorage } from '../../utils/cryptoUtils.ts';
 import { HttpStatusCode } from 'axios';
 import api from '../api.ts';
 
 export const signup = async (signupRequest: SignupRequest) => {
-  const res = await api.post<void>('/auth-service/auth/v1/signup', signupRequest, {
+  const res = await api.post<void>('/auth-service/auth/signup', signupRequest, {
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -24,7 +21,7 @@ export const signup = async (signupRequest: SignupRequest) => {
 
 export const login = async (email: string, password: string) => {
   const res = await api.post<LoginResponse>(
-    '/auth-service/auth/v1/login',
+    '/auth-service/auth/login',
     { email, password },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -37,7 +34,7 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async ({ id, accessToken }: LogoutRequest) => {
   const res = await api.post<void>(
-    '/auth-service/auth/v1/logout',
+    '/auth-service/auth/logout',
     { id, accessToken },
     {
       headers: { 'Content-Type': 'application/json' },
@@ -49,7 +46,7 @@ export const logout = async ({ id, accessToken }: LogoutRequest) => {
 };
 
 export const emailDuplicationCheck = async (email: string) => {
-  const res = await api.get<void>(`/auth-service/auth/v1/email/verification/check/${email}`, {
+  const res = await api.get<void>(`/auth-service/auth/email/verification/check/${email}`, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
 
@@ -58,7 +55,7 @@ export const emailDuplicationCheck = async (email: string) => {
 };
 
 export const sendVerificationCode = async (sendVerificationCodeRequest: SendVerificationCodeRequest) => {
-  const res = await api.post<void>('/auth-service/auth/v1/email/verification/send/code', sendVerificationCodeRequest, {
+  const res = await api.post<void>('/auth-service/auth/email/verification/send/code', sendVerificationCodeRequest, {
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -67,7 +64,7 @@ export const sendVerificationCode = async (sendVerificationCodeRequest: SendVeri
 };
 
 export const verifyCode = async (verifyCodeRequest: VerifyCodeRequest) => {
-  const res = await api.post<void>('/auth-service/auth/v1/email/verification/verify/code', verifyCodeRequest, {
+  const res = await api.post<void>('/auth-service/auth/email/verification/verify/code', verifyCodeRequest, {
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -76,40 +73,17 @@ export const verifyCode = async (verifyCodeRequest: VerifyCodeRequest) => {
 };
 
 export const findUsers = async (page: number, size: number) => {
-  const res = await api.get<Page<FindUsersResponse>>(`/auth-service/admin/v1/member/list?page=${page}&size=${size}`);
+  const res = await api.get<Page<FindUsersResponse>>(`/auth-service/admin/member/list?page=${page}&size=${size}`);
 
   if (res.status === HttpStatusCode.Ok) return Promise.resolve(res.data);
   return Promise.reject();
 };
 
-export const test = async () => {
-  const res = await api.get<void>('/auth-service/token/v1/validation', {});
-  if (res.status === HttpStatusCode.Ok) return Promise.resolve();
+export const uploadProfileImage = async (formData: FormData) => {
+  const res = await api.post('/auth-service/member/upload/profile/image', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve(res.data);
   return Promise.reject();
-};
-
-export const test2 = async () => {
-  const user = getUserFromStorage();
-
-  if (user === null) {
-    return;
-  }
-
-  const res = await api.post<TokenReIssueResponse>('/auth-service/token/v1/reissue', {
-    id: user.id,
-    email: user.email,
-    refreshToken: user.refreshToken,
-  } as TokenReIssueRequest);
-
-  if (res.status === HttpStatusCode.Ok) {
-    const formattedUser = {
-      ...user,
-      accessToken: res.data.accessToken,
-      refreshToken: res.data.refreshToken,
-    };
-
-    setUserToStorage(formattedUser);
-  }
-
-  console.log(res.data);
 };

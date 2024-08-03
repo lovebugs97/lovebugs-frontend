@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { ErrorResponse } from 'global-types';
 import { SendVerificationCodeRequest, SignupRequest, VerifyCodeRequest } from 'auth-types';
-import { emailDuplicationCheck, sendVerificationCode, signup, verifyCode } from '../services/auth/authService.ts';
+import { emailDuplicationCheck, sendVerificationCode, signup, verifyCode } from '../../../services/auth/authService.ts';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { isValidEmail, isValidPassword } from '../utils/validationUtils.ts';
+import { isValidEmail, isValidPassword } from '../../../utils/validationUtils.ts';
 
 export type SignupInputType = SignupRequest & {
   passwordCheck: string;

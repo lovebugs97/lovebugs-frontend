@@ -1,7 +1,7 @@
-import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from 'axios';
+import axios, { AxiosError, HttpStatusCode, InternalAxiosRequestConfig } from 'axios';
 import { TokenReIssueRequest, TokenReIssueResponse } from 'auth-types';
-import { getUserFromStorage, setUserToStorage } from '../utils/cryptoUtils.ts';
 import { logout } from './auth/authService.ts';
+import { useAuthStore } from '../store/authStore.ts';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const user = getUserFromStorage();
+    const user = useAuthStore.getState().user;
     if (user) {
       const token = user.accessToken;
       config.headers.Authorization = `Bearer ${token}`;
@@ -25,54 +25,51 @@ api.interceptors.request.use(
  * - Tanstack-Query의 OnError 콜백에서 구체적으로 처리
  */
 // 인터셉터 추가
+type CustomAxiosRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const user = getUserFromStorage();
+    const { user, setUser } = useAuthStore.getState();
 
-    const originalRequest = error.config as AxiosRequestConfig & {
-      _retry?: boolean;
-    };
+    const originalRequest: CustomAxiosRequestConfig | undefined = error.config;
 
-    if (error.response?.status === HttpStatusCode.Unauthorized && user && !originalRequest._retry) {
+    if (error.response?.status === HttpStatusCode.Unauthorized && originalRequest && user && !originalRequest._retry) {
       originalRequest._retry = true;
       console.log('interceptors response executed');
 
       try {
-        const refreshResponse = await api.post<TokenReIssueResponse>(
-          '/auth-service/token/v1/reissue',
+        const res = await api.post<TokenReIssueResponse>(
+          '/auth-service/token/reissue',
           { id: user.id, email: user.email, refreshToken: user.refreshToken } as TokenReIssueRequest,
           { headers: { 'Content-Type': 'application/json' } },
         );
 
-        if (refreshResponse.status === HttpStatusCode.Ok) {
-          const formattedUser = {
+        if (res.status === HttpStatusCode.Ok) {
+          const refreshedUser = {
             ...user,
-            accessToken: refreshResponse.data.accessToken,
-            refreshToken: refreshResponse.data.refreshToken,
+            accessToken: res.data.accessToken,
+            refreshToken: res.data.refreshToken,
           };
 
-          setUserToStorage(formattedUser);
-          api.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.accessToken}`;
+          setUser(refreshedUser);
+          originalRequest.headers.Authorization = `Bearer ${user.accessToken}`;
 
           return api(originalRequest);
         }
-
-        return Promise.reject();
-      } catch (refreshError) {
+      } catch (error) {
         logout({ id: user.id, accessToken: user.accessToken })
           .catch(() => console.log('Logout Failed'))
           .finally(() => {
-            console.log('logout finally');
-            setUserToStorage(null);
+            setUser(null);
             alert('로그인 세션이 만료되었습니다.');
-            window.location.reload();
           });
-        return Promise.reject(refreshError);
+
+        return Promise.reject(error);
       }
     }
-
-    return Promise.reject(error);
   },
 );
 

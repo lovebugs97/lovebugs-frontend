@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import SignupContainer from '../containers/signup/container/SignupContainer.tsx';
+import SignupContainer from '../features/signup/container/SignupContainer.tsx';
 
 const Signup: FC = () => {
   return (

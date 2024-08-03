@@ -37,7 +37,7 @@ const UserTableList: FC<UserTableListProps> = ({ users, page, totalPages, number
                 <td>
                   <Avatar
                     className="w-12 h-12"
-                    imageSrc={profileImage !== null ? `url${profileImage}` : `url(./src/assets/images/user.png)`}
+                    imageSrc={profileImage ? profileImage : import.meta.env.VITE_DEFAULT_PROFILE_IMAGE}
                   />
                 </td>
                 <td>{gender}</td>

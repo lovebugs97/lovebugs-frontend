@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import AdminEndpointContainer from '../../containers/admin/endpoint/AdminEndpointContainer.tsx';
+import AdminEndpointContainer from '../../features/admin/endpoint/AdminEndpointContainer.tsx';
 
 const AdminEndpoint: FC = () => {
   return (

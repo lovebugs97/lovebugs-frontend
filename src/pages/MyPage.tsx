@@ -1,23 +1,11 @@
-import { test, test2 } from '../services/auth/authService.ts';
+import { FC } from 'react';
+import MyPageContainer from '../features/myPage/container/MyPageContainer.tsx';
 
-const MyPage = () => {
-  const testBtn = async () => {
-    await test();
-  };
-
-  const test2Btn = async () => {
-    await test2();
-  };
-
+const MyPage: FC = () => {
   return (
-    <ul>
-      <li>
-        <button onClick={testBtn}>[Test] Token Validation</button>
-      </li>
-      <li>
-        <button onClick={test2Btn}>[Test] Token ReIssue</button>
-      </li>
-    </ul>
+    <div className="w-full h-full min-w-[1450px] min-h-full">
+      <MyPageContainer />
+    </div>
   );
 };
 

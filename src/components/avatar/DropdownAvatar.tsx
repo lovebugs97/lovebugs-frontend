@@ -20,11 +20,15 @@ const DropdownAvatar: FC<UserDropdownAvatarProps> = ({ user }) => {
   };
 
   return (
-    <div className="dropdown dropdown-hover dropdown-end">
+    <div className="dropdown dropdown-end dropdown-hover rounded-full w-16 h-16">
       <Avatar
         role="button"
-        imageSrc={profileImage !== null ? `url${profileImage}` : `url(./src/assets/images/user.png)`}
-        className="btn m-auto w-12 h-12 p-4"
+        imageSrc={
+          profileImage
+            ? `http://localhost:8000/api/auth-service/member/v1/profile/image/${profileImage}`
+            : './src/assets/images/user.png'
+        }
+        className="btn w-fit h-fit"
       />
       <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
         {DropdownItems.map(

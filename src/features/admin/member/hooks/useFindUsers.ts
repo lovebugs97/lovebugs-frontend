@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { findUsers } from '../services/auth/authService.ts';
+import { findUsers } from '../../../../services/auth/authService.ts';
 import { FindUsersResponse, Page } from 'auth-types';
 
-const useUsers = () => {
+const useFindUsers = () => {
   const [page, setPage] = useState(0);
 
   const findUserQuery = useQuery<Page<FindUsersResponse>>({
@@ -18,4 +18,4 @@ const useUsers = () => {
   };
 };
 
-export default useUsers;
+export default useFindUsers;

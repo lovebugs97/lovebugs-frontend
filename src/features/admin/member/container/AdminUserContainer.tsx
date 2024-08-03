@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import useUsers from '../../../../hooks/useUsers.ts';
+import useFindUsers from '../hooks/useFindUsers.ts';
 import UserTableList from '../components/UserTableList.tsx';
 
-const AdminMemberContainer: FC = () => {
-  const { page, handlePageChange, findUserData } = useUsers();
+const AdminUserContainer: FC = () => {
+  const { page, handlePageChange, findUserData } = useFindUsers();
 
   if (!findUserData) {
     return <div>Loading...</div>;
@@ -28,4 +28,4 @@ const AdminMemberContainer: FC = () => {
   );
 };
 
-export default AdminMemberContainer;
+export default AdminUserContainer;
